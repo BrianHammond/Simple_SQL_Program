@@ -22,7 +22,7 @@ from load_table import load_table
 
 create_db()
 
-class UI(QMainWindow):  
+class UI(QWidget):  
     def __init__(self):
         super().__init__()
         uic.loadUi("main.ui", self) #load the UI file
@@ -87,12 +87,6 @@ class UI(QMainWindow):
         load_table(self)
 
     def update_employee(self):
-        first_name = self.firstname_edit.text()
-        last_name = self.lastname_edit.text()
-        job_title = self.title_edit.text()
-        join_date = self.date_edit.date().toString("MM-dd-yyyy")
-        department = self.department_combobox.currentText()
-
         selected_row = self.table.currentRow()
  
         if selected_row == -1:
