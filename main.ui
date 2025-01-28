@@ -133,6 +133,11 @@
            </property>
            <item>
             <property name="text">
+             <string>Executive</string>
+            </property>
+           </item>
+           <item>
+            <property name="text">
              <string>HR</string>
             </property>
            </item>
@@ -339,6 +344,9 @@
     </item>
     <item>
      <widget class="QTableWidget" name="table">
+      <attribute name="verticalHeaderVisible">
+       <bool>false</bool>
+      </attribute>
       <column>
        <property name="text">
         <string>ID</string>
