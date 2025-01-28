@@ -1,9 +1,9 @@
 
 # checks to see if the 'PyQT5' module is installed
 try: 
-    from PyQt5.QtWidgets import *
-    from PyQt5.QtSql import *
-    from PyQt5.QtCore import *
+    from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QTableWidgetItem
+    from PyQt5.QtSql import QSqlQuery
+    from PyQt5.QtCore import QDate
     from PyQt5 import uic
 except ModuleNotFoundError: # if it's not then it will automatically be installed
     print("PyQT5 module is not installed")
@@ -13,16 +13,16 @@ except ModuleNotFoundError: # if it's not then it will automatically be installe
         subprocess.call(['pip', 'install', package])
 
 import sys
-from PyQt5.QtWidgets import *
-from PyQt5.QtSql import *
-from PyQt5.QtCore import *
+from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QTableWidgetItem
+from PyQt5.QtSql import QSqlQuery
+from PyQt5.QtCore import QDate
 from PyQt5 import uic
 from create_db import create_db
 from load_table import load_table
 
 create_db()
 
-class UI(QWidget):  
+class UI(QMainWindow):  
     def __init__(self):
         super().__init__()
         uic.loadUi("main.ui", self) #load the UI file
