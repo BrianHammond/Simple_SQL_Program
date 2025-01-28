@@ -1,26 +1,24 @@
 
-# checks to see if the 'PyQT5' module is installed
+# checks to see if the 'PyQT6' module is installed
 try: 
-    from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QTableWidgetItem
-    from PyQt5.QtSql import QSqlQuery
-    from PyQt5.QtCore import QDate
-    from PyQt5 import uic
+    from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
+    from PyQt6.QtSql import QSqlQuery
+    from PyQt6.QtCore import QDate
+    from PyQt6 import uic
 except ModuleNotFoundError: # if it's not then it will automatically be installed
-    print("PyQT5 module is not installed")
+    print("PyQT6 module is not installed")
     import subprocess
-    required_packages = ['PyQT5']
+    required_packages = ['PyQT6']
     for package in required_packages:
         subprocess.call(['pip', 'install', package])
 
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QMessageBox, QTableWidgetItem
-from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtCore import QDate
-from PyQt5 import uic
+from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
+from PyQt6.QtSql import QSqlQuery
+from PyQt6.QtCore import QDate
+from PyQt6 import uic
 from create_db import create_db
 from load_table import load_table
-
-create_db()
 
 class UI(QMainWindow):  
     def __init__(self):
@@ -55,7 +53,7 @@ class UI(QMainWindow):
         query.addBindValue(job_title)
         query.addBindValue(join_date)
         query.addBindValue(department)
-        query.exec_()
+        query.exec()
 
         # clear these fields for the next query
         self.firstname_edit.clear()
@@ -74,15 +72,15 @@ class UI(QMainWindow):
 
         id = int(self.table.item(selected_row, 0).text())
 
-        confirm = QMessageBox.question(self, "Are you sure?", "Remove Employee?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.No:
+        confirm = QMessageBox.question(self, "Are you sure?", "Remove Employee?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirm == QMessageBox.StandardButton.No:
             return
 
         query = QSqlQuery()
         query.prepare("DELETE FROM employees WHERE id = ?")
         query.addBindValue(id)
 
-        query.exec_()
+        query.exec()
 
         load_table(self)
 
@@ -100,8 +98,8 @@ class UI(QMainWindow):
         join_date = self.table.item(selected_row, 4).text()
         department = self.table.item(selected_row, 5).text()
 
-        confirm = QMessageBox.question(self, "Are you sure?", "Update Employee Information?", QMessageBox.Yes | QMessageBox.No)
-        if confirm == QMessageBox.No:
+        confirm = QMessageBox.question(self, "Are you sure?", "Update Employee Information?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if confirm == QMessageBox.StandardButton.No:
             return
 
         query = QSqlQuery()
@@ -117,25 +115,25 @@ class UI(QMainWindow):
         query.addBindValue(department)
         query.addBindValue(id)
 
-        query.exec_()
+        query.exec()
 
         load_table(self)
 
     def remove_all(self):
-        confirm = QMessageBox.question(self, "Are you sure?", "Are you sure you want to delete?", QMessageBox.Yes | QMessageBox.No)
+        confirm = QMessageBox.question(self, "Are you sure?", "Are you sure you want to delete?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         match confirm:
-            case QMessageBox.No:
+            case QMessageBox.StandardButton.No:
                 return
-            case QMessageBox.Yes:
-                confirm2  = QMessageBox.question(self, "Are you sure?", "Dude, are you like really sure you want to delete?", QMessageBox.Yes | QMessageBox.No)
+            case QMessageBox.StandardButton.Yes:
+                confirm2  = QMessageBox.question(self, "Are you sure?", "Dude, are you like really sure you want to delete?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
                 match confirm2:
-                    case QMessageBox.No:
+                    case QMessageBox.StandardButton.No:
                         return
 
         query = QSqlQuery()
         query.prepare("DELETE FROM employees")
 
-        query.exec_()
+        query.exec()
 
         load_table(self)
 
@@ -153,7 +151,6 @@ class UI(QMainWindow):
             last_name_search = '%'
         else:
             last_name_search = self.last_name_search.text()
-              
 
         query = QSqlQuery("""
                           SELECT * FROM employees where (last_name like ?) AND (first_name like ?)
@@ -161,7 +158,7 @@ class UI(QMainWindow):
         query.addBindValue(last_name_search)
         query.addBindValue(first_name_search)
 
-        query.exec_()
+        query.exec()
         
         row = 0
         while query.next(): # while loop to query all the rows in the database
@@ -186,6 +183,7 @@ class UI(QMainWindow):
 # Show/Run app
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    create_db()
     UIWindow = UI()
     UIWindow.show()
-    app.exec()
+    sys.exit(app.exec())

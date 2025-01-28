@@ -1,6 +1,6 @@
 import sys
-from PyQt5.QtWidgets import QMessageBox
-from PyQt5.QtSql import QSqlQuery, QSqlDatabase
+from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtSql import QSqlDatabase, QSqlQuery
 
 def create_db():
     database = QSqlDatabase.addDatabase("QSQLITE")
@@ -10,7 +10,7 @@ def create_db():
         sys.exit(1)
 
     query = QSqlQuery()
-    query.exec_("""
+    query.exec("""
                 CREATE TABLE IF NOT EXISTS employees (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     first_name TEXT,

@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QTableWidgetItem
-from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtCore import QDate
+from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtSql import QSqlQuery
+from PyQt6.QtCore import QDate
 
 def load_table(self):
     self.date_edit.setDate(QDate.currentDate())
