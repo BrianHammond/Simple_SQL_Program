@@ -1,4 +1,3 @@
-
 # checks to see if the 'PyQT6' module is installed
 try: 
     from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
@@ -33,8 +32,16 @@ class UI(QMainWindow):
         
         #Search Area
         self.search_button.clicked.connect(self.search_employee)
+
+        #Menu Bar
+        self.action_about.triggered.connect(self.about)
     
         load_table(self)
+
+    def about(self):
+        self.window = QMainWindow()
+        uic.loadUi("about.ui", self.window) #load the UI file
+        self.window.show()
 
     def add_employee(self):
         first_name = self.firstname_edit.text()
@@ -184,6 +191,6 @@ class UI(QMainWindow):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     create_db()
-    UIWindow = UI()
-    UIWindow.show()
+    ui = UI()
+    ui.show()
     sys.exit(app.exec())
