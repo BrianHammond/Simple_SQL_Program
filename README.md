@@ -2,6 +2,8 @@ I'm still learning Python and using these as reference guides for any employment
 
 I used Qt Designer to make the layout.
 
+This program uses SQLite.
+
 I use SQL a lot and this project will keep me in practice.
 
 Best Regards,<br/>
