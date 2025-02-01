@@ -44,10 +44,10 @@ class UI(QMainWindow):
         self.window.show()
 
     def add_employee(self):
-        first_name = self.firstname_edit.text()
-        last_name = self.lastname_edit.text()
-        job_title = self.title_edit.text()
-        join_date = self.date_edit.date().toString("MM-dd-yyyy")
+        firstname = self.firstname_edit.text()
+        lastname = self.lastname_edit.text()
+        jobtitle = self.jobtitle_edit.text()
+        joindate = self.joindate_edit.date().toString("MM-dd-yyyy")
         department = self.department_combobox.currentText()
                         
         query = QSqlQuery()
@@ -55,18 +55,18 @@ class UI(QMainWindow):
                     INSERT INTO employees (first_name, last_name, job_title, join_date, department)
                     VALUES(?, ?, ?, ?, ?)
                     """)
-        query.addBindValue(first_name)
-        query.addBindValue(last_name)
-        query.addBindValue(job_title)
-        query.addBindValue(join_date)
+        query.addBindValue(firstname)
+        query.addBindValue(lastname)
+        query.addBindValue(jobtitle)
+        query.addBindValue(joindate)
         query.addBindValue(department)
         query.exec()
 
         # clear these fields for the next query
         self.firstname_edit.clear()
         self.lastname_edit.clear()
-        self.title_edit.clear()
-        self.date_edit.setDate(QDate.currentDate())
+        self.jobtitle_edit.clear()
+        self.joindate_edit.setDate(QDate.currentDate())
         self.department_combobox.setCurrentIndex(0)
 
         load_table(self) # this will load the database back into the table with the updated information
@@ -99,10 +99,10 @@ class UI(QMainWindow):
             return
         
         id = int(self.table.item(selected_row, 0).text())
-        first_name = self.table.item(selected_row, 1).text()
-        last_name = self.table.item(selected_row, 2).text()
-        job_title = self.table.item(selected_row, 3).text()
-        join_date = self.table.item(selected_row, 4).text()
+        firstname = self.table.item(selected_row, 1).text()
+        lastname = self.table.item(selected_row, 2).text()
+        jobtitle = self.table.item(selected_row, 3).text()
+        joindate = self.table.item(selected_row, 4).text()
         department = self.table.item(selected_row, 5).text()
 
         confirm = QMessageBox.question(self, "Are you sure?", "Update Employee Information?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
@@ -115,10 +115,10 @@ class UI(QMainWindow):
                       UPDATE employees SET first_name= ?, last_name = ?, job_title = ?, join_date = ?, department = ? WHERE id = ?
                       """)
         
-        query.addBindValue(first_name)
-        query.addBindValue(last_name)
-        query.addBindValue(job_title)
-        query.addBindValue(join_date)
+        query.addBindValue(firstname)
+        query.addBindValue(lastname)
+        query.addBindValue(jobtitle)
+        query.addBindValue(joindate)
         query.addBindValue(department)
         query.addBindValue(id)
 
@@ -147,42 +147,42 @@ class UI(QMainWindow):
     def search_employee (self):
         self.table.setRowCount(0)
 
-        first_name_search = self.first_name_search.text()
-        if first_name_search == '':
-            first_name_search = '%'
+        firstname_search = self.firstname_search.text()
+        if firstname_search == '':
+            firstname_search = '%'
         else:
-            first_name_search = self.first_name_search.text()
+            firstname_search = self.firstname_search.text()
 
-        last_name_search = self.last_name_search.text()
-        if last_name_search == '':
-            last_name_search = '%'
+        lastname_search = self.lastname_search.text()
+        if lastname_search == '':
+            lastname_search = '%'
         else:
-            last_name_search = self.last_name_search.text()
+            lastname_search = self.lastname_search.text()
 
         query = QSqlQuery("""
                           SELECT * FROM employees where (last_name like ?) AND (first_name like ?)
                           """)
-        query.addBindValue(last_name_search)
-        query.addBindValue(first_name_search)
+        query.addBindValue(lastname_search)
+        query.addBindValue(firstname_search)
 
         query.exec()
         
         row = 0
         while query.next(): # while loop to query all the rows in the database
             id = query.value(0)
-            first_name = query.value(1)
-            last_name = query.value(2)
-            job_title = query.value(3)
-            join_date = query.value(4)
+            firstname = query.value(1)
+            lastname = query.value(2)
+            jobtitle = query.value(3)
+            joindate = query.value(4)
             department = query.value(5)
 
             # and add them to the table
             self.table.insertRow(row)
             self.table.setItem(row, 0, QTableWidgetItem(str(id)))
-            self.table.setItem(row, 1, QTableWidgetItem(first_name))
-            self.table.setItem(row, 2, QTableWidgetItem(last_name))
-            self.table.setItem(row, 3, QTableWidgetItem(job_title))
-            self.table.setItem(row, 4, QTableWidgetItem(join_date))
+            self.table.setItem(row, 1, QTableWidgetItem(firstname))
+            self.table.setItem(row, 2, QTableWidgetItem(lastname))
+            self.table.setItem(row, 3, QTableWidgetItem(jobtitle))
+            self.table.setItem(row, 4, QTableWidgetItem(joindate))
             self.table.setItem(row, 5, QTableWidgetItem(department))
 
             row += 1

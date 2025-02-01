@@ -52,7 +52,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QDateEdit" name="date_edit">
+          <widget class="QDateEdit" name="joindate_edit">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -197,7 +197,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="title_edit">
+          <widget class="QLineEdit" name="jobtitle_edit">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -290,7 +290,7 @@
        <item>
         <layout class="QGridLayout" name="gridLayout">
          <item row="0" column="1">
-          <widget class="QLineEdit" name="last_name_search">
+          <widget class="QLineEdit" name="lastname_search">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
@@ -302,7 +302,7 @@
           </widget>
          </item>
          <item row="0" column="0">
-          <widget class="QLineEdit" name="first_name_search">
+          <widget class="QLineEdit" name="firstname_search">
            <property name="font">
             <font>
              <pointsize>12</pointsize>
