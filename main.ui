@@ -400,12 +400,18 @@
      <string>Help</string>
     </property>
     <addaction name="action_about"/>
+    <addaction name="actionAbout_Qt"/>
    </widget>
    <addaction name="menu_help"/>
   </widget>
   <action name="action_about">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

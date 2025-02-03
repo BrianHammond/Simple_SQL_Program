@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QMessageBox, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox, QTableWidgetItem
 from PyQt6.QtSql import QSqlQuery
 from PyQt6.QtCore import QDate
 from PyQt6 import uic
@@ -19,6 +19,7 @@ class MainWindow(QMainWindow):
 
         #Menu Bar
         self.action_about.triggered.connect(self.about)
+        self.actionAbout_Qt.triggered.connect(self.about_qt)
     
         self.load_table()
 
@@ -196,3 +197,6 @@ class MainWindow(QMainWindow):
         self.window = QWidget()
         uic.loadUi("about.ui", self.window) #load the UI file
         self.window.show()
+
+    def about_qt(self):
+        QApplication.aboutQt()
