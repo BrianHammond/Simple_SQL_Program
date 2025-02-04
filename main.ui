@@ -61,6 +61,9 @@
            <property name="text">
             <string>Date Joined:</string>
            </property>
+           <property name="buddy">
+            <cstring>joindate_edit</cstring>
+           </property>
           </widget>
          </item>
          <item>
@@ -121,6 +124,9 @@
            </property>
            <property name="text">
             <string>Department:</string>
+           </property>
+           <property name="buddy">
+            <cstring>department_combobox</cstring>
            </property>
           </widget>
          </item>
@@ -427,6 +433,21 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>joindate_edit</tabstop>
+  <tabstop>department_combobox</tabstop>
+  <tabstop>firstname_edit</tabstop>
+  <tabstop>lastname_edit</tabstop>
+  <tabstop>jobtitle_edit</tabstop>
+  <tabstop>add_button</tabstop>
+  <tabstop>update_button</tabstop>
+  <tabstop>remove_button</tabstop>
+  <tabstop>remove_all_button</tabstop>
+  <tabstop>firstname_search</tabstop>
+  <tabstop>lastname_search</tabstop>
+  <tabstop>search_button</tabstop>
+  <tabstop>table</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
