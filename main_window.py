@@ -1,4 +1,4 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QWidget, QMessageBox, QTableWidgetItem
+from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QTableWidgetItem
 from PyQt6.QtSql import QSqlQuery
 from PyQt6.QtCore import QDate
 from PyQt6 import uic
@@ -194,7 +194,7 @@ class MainWindow(QMainWindow):
             row += 1
 
     def about(self):
-        self.window = QWidget()
+        self.window = QDialog()
         uic.loadUi("about.ui", self.window) #load the UI file
         self.window.show()
 
