@@ -3,7 +3,7 @@ from PySide6.QtSql import QSqlQuery
 from PySide6.QtCore import QDate
 import sys
 from main_ui import Ui_MainWindow as main_ui
-from about_ui import Ui_MainWindow as about_ui
+from about_window import AboutWindow
 from create_db import create_db
 
 class MainWindow(QMainWindow, main_ui):  
@@ -202,11 +202,6 @@ class MainWindow(QMainWindow, main_ui):
 
     def about_qt(self):
         QApplication.aboutQt()
-
-class AboutWindow(QMainWindow, about_ui):
-    def __init__(self):
-        super().__init__()
-        self.setupUi(self)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) # needs to run first
