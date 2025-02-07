@@ -1,6 +1,6 @@
 import sys
-from PyQt6.QtWidgets import QMessageBox
-from PyQt6.QtSql import QSqlDatabase, QSqlQuery
+from PySide6.QtWidgets import QMessageBox
+from PySide6.QtSql import QSqlDatabase, QSqlQuery
 
 def create_db():
     database = QSqlDatabase.addDatabase("QSQLITE")

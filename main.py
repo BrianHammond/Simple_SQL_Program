@@ -1,14 +1,15 @@
-from PyQt6.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QTableWidgetItem
-from PyQt6.QtSql import QSqlQuery
-from PyQt6.QtCore import QDate
-from PyQt6 import uic
+from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QTableWidgetItem
+from PySide6.QtSql import QSqlQuery
+from PySide6.QtCore import QDate
 import sys
+from main_ui import Ui_MainWindow as main_ui
+from about_ui import Ui_MainWindow as about_ui
 from create_db import create_db
 
-class MainWindow(QMainWindow):  
+class MainWindow(QMainWindow, main_ui):  
     def __init__(self):
         super().__init__()
-        uic.loadUi("main.ui", self) #load the UI file
+        self.setupUi(self)
 
         #Input Area
         self.add_button.clicked.connect(self.add_employee)
@@ -20,7 +21,7 @@ class MainWindow(QMainWindow):
         self.search_button.clicked.connect(self.search_employee)
 
         #Menu Bar
-        self.action_about.triggered.connect(self.about)
+        self.action_about.triggered.connect(self.show_about)
         self.actionAbout_Qt.triggered.connect(self.about_qt)
     
         self.load_table()
@@ -195,13 +196,17 @@ class MainWindow(QMainWindow):
 
             row += 1
 
-    def about(self):
-        self.window = QDialog()
-        uic.loadUi("about.ui", self.window) #load the UI file
-        self.window.show()
+    def show_about(self):
+        self.about_window = AboutWindow()
+        self.about_window.show()
 
     def about_qt(self):
         QApplication.aboutQt()
+
+class AboutWindow(QMainWindow, about_ui):
+    def __init__(self):
+        super().__init__()
+        self.setupUi(self)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) # needs to run first
