@@ -1,15 +1,19 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QDialog, QMessageBox, QTableWidgetItem
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
 from PySide6.QtSql import QSqlQuery
 from PySide6.QtCore import QDate
 import sys
 from main_ui import Ui_MainWindow as main_ui
 from about_window import AboutWindow
 from create_db import create_db
+import qdarkstyle
 
 class MainWindow(QMainWindow, main_ui):  
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        #Dark Style
+        self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
 
         #Input Area
         self.add_button.clicked.connect(self.add_employee)
