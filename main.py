@@ -28,7 +28,7 @@ class MainWindow(QMainWindow, main_ui):
         self.action_about.triggered.connect(self.show_about)
         self.actionAbout_Qt.triggered.connect(self.about_qt)
         self.action_dark_mode.toggled.connect(self.dark_mode)
-    
+        self.initialize_table()
         self.load_table()
 
     def add_employee(self):
@@ -49,15 +49,9 @@ class MainWindow(QMainWindow, main_ui):
         query.addBindValue(joindate)
         query.addBindValue(department)
         query.exec()
-
-        # clear these fields for the next query
-        self.line_firstname.clear()
-        self.line_lastname.clear()
-        self.line_jobtitle.clear()
-        self.date_joined.setDate(QDate.currentDate())
-        self.combobox_department.setCurrentIndex(0)
-
+        
         self.load_table() # this will load the database back into the table with the updated information
+        self.clear_fields()
 
     def remove_employee(self):
         selected_row = self.table.currentRow()
@@ -135,17 +129,17 @@ class MainWindow(QMainWindow, main_ui):
     def search_employee (self):
         self.table.setRowCount(0)
 
-        firstname_search = self.firstname_search.text()
+        firstname_search = self.line_firstname_search.text()
         if firstname_search == '':
             firstname_search = '%'
         else:
-            firstname_search = self.firstname_search.text()
+            firstname_search = self.line_firstname_search.text()
 
-        lastname_search = self.lastname_search.text()
+        lastname_search = self.line_lastname_search.text()
         if lastname_search == '':
             lastname_search = '%'
         else:
-            lastname_search = self.lastname_search.text()
+            lastname_search = self.line_lastname_search.text()
 
         query = QSqlQuery("""
                           SELECT * FROM employees where (last_name like ?) AND (first_name like ?)
@@ -181,6 +175,11 @@ class MainWindow(QMainWindow, main_ui):
         else:
             self.setStyleSheet('')
 
+    def initialize_table(self):
+        self.table.setRowCount(0) # clears the table
+        self.table.setColumnCount(6)
+        self.table.setHorizontalHeaderLabels(['ID', 'First Name', 'Last Name', 'Job Title', 'Join Date', 'Department'])
+
     def load_table(self):
         self.date_joined.setDate(QDate.currentDate())
         self.table.setRowCount(0)
@@ -204,8 +203,16 @@ class MainWindow(QMainWindow, main_ui):
             self.table.setItem(row, 3, QTableWidgetItem(jobtitle))
             self.table.setItem(row, 4, QTableWidgetItem(joindate))
             self.table.setItem(row, 5, QTableWidgetItem(department))
-
             row += 1
+            self.table.resizeColumnsToContents()
+            self.table.resizeRowsToContents()
+
+    def clear_fields(self):
+        self.line_firstname.clear()
+        self.line_lastname.clear()
+        self.line_jobtitle.clear()
+        self.date_joined.setDate(QDate.currentDate())
+        self.combobox_department.setCurrentIndex(0)
 
     def show_about(self):
         self.about_window = AboutWindow(dark_mode=self.action_dark_mode.isChecked())

@@ -197,20 +197,6 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.search_group)
 
         self.table = QTableWidget(self.centralwidget)
-        if (self.table.columnCount() < 6):
-            self.table.setColumnCount(6)
-        __qtablewidgetitem = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(0, __qtablewidgetitem)
-        __qtablewidgetitem1 = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(1, __qtablewidgetitem1)
-        __qtablewidgetitem2 = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(2, __qtablewidgetitem2)
-        __qtablewidgetitem3 = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(3, __qtablewidgetitem3)
-        __qtablewidgetitem4 = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(4, __qtablewidgetitem4)
-        __qtablewidgetitem5 = QTableWidgetItem()
-        self.table.setHorizontalHeaderItem(5, __qtablewidgetitem5)
         self.table.setObjectName(u"table")
         self.table.verticalHeader().setVisible(False)
 
@@ -285,18 +271,6 @@ class Ui_MainWindow(object):
         self.line_lastname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Last Name", None))
         self.line_firstname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"First Name", None))
         self.button_search.setText(QCoreApplication.translate("MainWindow", u"Search", None))
-        ___qtablewidgetitem = self.table.horizontalHeaderItem(0)
-        ___qtablewidgetitem.setText(QCoreApplication.translate("MainWindow", u"ID", None));
-        ___qtablewidgetitem1 = self.table.horizontalHeaderItem(1)
-        ___qtablewidgetitem1.setText(QCoreApplication.translate("MainWindow", u"First name", None));
-        ___qtablewidgetitem2 = self.table.horizontalHeaderItem(2)
-        ___qtablewidgetitem2.setText(QCoreApplication.translate("MainWindow", u"Last Name", None));
-        ___qtablewidgetitem3 = self.table.horizontalHeaderItem(3)
-        ___qtablewidgetitem3.setText(QCoreApplication.translate("MainWindow", u"Job Title", None));
-        ___qtablewidgetitem4 = self.table.horizontalHeaderItem(4)
-        ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Join Date", None));
-        ___qtablewidgetitem5 = self.table.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Department", None));
         self.menu_help.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
         self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi
