@@ -1,9 +1,10 @@
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
+import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QWidget
+from PySide6.QtCore import QSettings
 from PySide6.QtSql import QSqlQuery
 from PySide6.QtCore import QDate
-import sys
 from main_ui import Ui_MainWindow as main_ui
-from about_window import AboutWindow
+from about_ui import Ui_Form as about_ui
 from create_db import create_db
 import qdarkstyle
 
@@ -11,31 +12,31 @@ class MainWindow(QMainWindow, main_ui):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-
-        #Dark Style
-        self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+        self.settings = QSettings('settings.ini', QSettings.IniFormat)
+        self.loadSettings()
 
         #Input Area
-        self.add_button.clicked.connect(self.add_employee)
-        self.update_button.clicked.connect(self.update_employee)
-        self.remove_button.clicked.connect(self.remove_employee)
-        self.remove_all_button.clicked.connect(self.remove_all)
+        self.button_add.clicked.connect(self.add_employee)
+        self.button_update.clicked.connect(self.update_employee)
+        self.button_remove.clicked.connect(self.remove_employee)
+        self.button_remove_all.clicked.connect(self.remove_all)
         
         #Search Area
-        self.search_button.clicked.connect(self.search_employee)
+        self.button_search.clicked.connect(self.search_employee)
 
         #Menu Bar
         self.action_about.triggered.connect(self.show_about)
         self.actionAbout_Qt.triggered.connect(self.about_qt)
+        self.action_dark_mode.toggled.connect(self.dark_mode)
     
         self.load_table()
 
     def add_employee(self):
-        firstname = self.firstname_edit.text()
-        lastname = self.lastname_edit.text()
-        jobtitle = self.jobtitle_edit.text()
-        joindate = self.joindate_edit.date().toString("MM-dd-yyyy")
-        department = self.department_combobox.currentText()
+        firstname = self.line_firstname.text()
+        lastname = self.line_lastname.text()
+        jobtitle = self.line_jobtitle.text()
+        joindate = self.date_joined.date().toString("MM-dd-yyyy")
+        department = self.combobox_department.currentText()
                         
         query = QSqlQuery()
         query.prepare("""
@@ -50,11 +51,11 @@ class MainWindow(QMainWindow, main_ui):
         query.exec()
 
         # clear these fields for the next query
-        self.firstname_edit.clear()
-        self.lastname_edit.clear()
-        self.jobtitle_edit.clear()
-        self.joindate_edit.setDate(QDate.currentDate())
-        self.department_combobox.setCurrentIndex(0)
+        self.line_firstname.clear()
+        self.line_lastname.clear()
+        self.line_jobtitle.clear()
+        self.date_joined.setDate(QDate.currentDate())
+        self.combobox_department.setCurrentIndex(0)
 
         self.load_table() # this will load the database back into the table with the updated information
 
@@ -174,8 +175,14 @@ class MainWindow(QMainWindow, main_ui):
 
             row += 1
 
+    def dark_mode(self, checked):
+        if checked:
+            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+        else:
+            self.setStyleSheet('')
+
     def load_table(self):
-        self.joindate_edit.setDate(QDate.currentDate())
+        self.date_joined.setDate(QDate.currentDate())
         self.table.setRowCount(0)
 
         query = QSqlQuery("SELECT * FROM employees")
@@ -201,11 +208,37 @@ class MainWindow(QMainWindow, main_ui):
             row += 1
 
     def show_about(self):
-        self.about_window = AboutWindow()
+        self.about_window = AboutWindow(dark_mode=self.action_dark_mode.isChecked())
         self.about_window.show()
 
     def about_qt(self):
         QApplication.aboutQt()
+
+    def closeEvent(self, event): #settings will save when closing the app
+        self.settings.setValue('window_size', self.size())
+        self.settings.setValue('window_pos', self.pos())
+        self.settings.setValue('dark_mode', self.action_dark_mode.isChecked())
+        event.accept()
+
+    def loadSettings(self): #settings will load when opening the app
+        size = self.settings.value('window_size', None)
+        pos = self.settings.value('window_pos', None)
+        dark = self.settings.value('dark_mode')
+        if size is not None:
+            self.resize(size)
+        if pos is not None:
+            self.move(pos)
+        if dark == 'true':
+            self.action_dark_mode.setChecked(True)
+            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+
+class AboutWindow(QWidget, about_ui): # Configures the About window
+    def __init__(self, dark_mode=False):
+        super().__init__()
+        self.setupUi(self)
+
+        if dark_mode:
+            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) # needs to run first
