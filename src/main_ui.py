@@ -16,37 +16,36 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QGridLayout,
-    QGroupBox, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QMenu, QMenuBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStatusBar,
-    QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QComboBox, QDateEdit, QGroupBox,
+    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
+    QMainWindow, QMenu, QMenuBar, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QTableWidget,
+    QTableWidgetItem, QVBoxLayout, QWidget)
 import resources_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(819, 637)
+        MainWindow.resize(1042, 781)
         icon = QIcon()
         icon.addFile(u":/images/ms_icon.jpg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         self.action_about = QAction(MainWindow)
         self.action_about.setObjectName(u"action_about")
-        self.actionAbout_Qt = QAction(MainWindow)
-        self.actionAbout_Qt.setObjectName(u"actionAbout_Qt")
+        self.action_about_qt = QAction(MainWindow)
+        self.action_about_qt.setObjectName(u"action_about_qt")
         self.action_dark_mode = QAction(MainWindow)
         self.action_dark_mode.setObjectName(u"action_dark_mode")
         self.action_dark_mode.setCheckable(True)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout = QVBoxLayout(self.centralwidget)
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.verticalLayout.setContentsMargins(10, 10, 10, 10)
+        self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.input_group = QGroupBox(self.centralwidget)
         self.input_group.setObjectName(u"input_group")
-        self.verticalLayout_2 = QVBoxLayout(self.input_group)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout = QVBoxLayout(self.input_group)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.date_label = QLabel(self.input_group)
@@ -58,7 +57,7 @@ class Ui_MainWindow(object):
         self.date_label.setSizePolicy(sizePolicy)
         self.date_label.setMinimumSize(QSize(0, 0))
         font = QFont()
-        font.setPointSize(12)
+        font.setPointSize(8)
         self.date_label.setFont(font)
 
         self.horizontalLayout.addWidget(self.date_label)
@@ -72,10 +71,6 @@ class Ui_MainWindow(object):
         self.date_joined.setCalendarPopup(True)
 
         self.horizontalLayout.addWidget(self.date_joined)
-
-        self.horizontalSpacer = QSpacerItem(90, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
-
-        self.horizontalLayout.addItem(self.horizontalSpacer)
 
         self.department_label = QLabel(self.input_group)
         self.department_label.setObjectName(u"department_label")
@@ -101,8 +96,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.combobox_department)
 
+        self.horizontalSpacer = QSpacerItem(349, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout)
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+
+        self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
@@ -125,7 +124,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.addWidget(self.line_jobtitle)
 
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout_2)
+        self.verticalLayout.addLayout(self.horizontalLayout_2)
 
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
@@ -154,33 +153,38 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.button_remove_all)
 
 
-        self.verticalLayout_2.addLayout(self.horizontalLayout_3)
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
 
 
-        self.verticalLayout.addWidget(self.input_group)
+        self.verticalLayout_3.addWidget(self.input_group)
 
         self.verticalSpacer = QSpacerItem(20, 35, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
-        self.verticalLayout.addItem(self.verticalSpacer)
+        self.verticalLayout_3.addItem(self.verticalSpacer)
 
         self.search_group = QGroupBox(self.centralwidget)
         self.search_group.setObjectName(u"search_group")
-        self.verticalLayout_3 = QVBoxLayout(self.search_group)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.line_lastname_search = QLineEdit(self.search_group)
-        self.line_lastname_search.setObjectName(u"line_lastname_search")
-        self.line_lastname_search.setFont(font)
-
-        self.gridLayout.addWidget(self.line_lastname_search, 0, 1, 1, 1)
-
+        self.verticalLayout_2 = QVBoxLayout(self.search_group)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.horizontalLayout_4 = QHBoxLayout()
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.line_firstname_search = QLineEdit(self.search_group)
         self.line_firstname_search.setObjectName(u"line_firstname_search")
         self.line_firstname_search.setFont(font)
 
-        self.gridLayout.addWidget(self.line_firstname_search, 0, 0, 1, 1)
+        self.horizontalLayout_4.addWidget(self.line_firstname_search)
 
+        self.line_lastname_search = QLineEdit(self.search_group)
+        self.line_lastname_search.setObjectName(u"line_lastname_search")
+        self.line_lastname_search.setFont(font)
+
+        self.horizontalLayout_4.addWidget(self.line_lastname_search)
+
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout_4)
+
+        self.horizontalLayout_5 = QHBoxLayout()
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.button_search = QPushButton(self.search_group)
         self.button_search.setObjectName(u"button_search")
         sizePolicy.setHeightForWidth(self.button_search.sizePolicy().hasHeightForWidth())
@@ -188,19 +192,32 @@ class Ui_MainWindow(object):
         self.button_search.setMinimumSize(QSize(116, 0))
         self.button_search.setFont(font)
 
-        self.gridLayout.addWidget(self.button_search, 1, 0, 1, 1)
+        self.horizontalLayout_5.addWidget(self.button_search)
+
+        self.button_csv = QPushButton(self.search_group)
+        self.button_csv.setObjectName(u"button_csv")
+        sizePolicy.setHeightForWidth(self.button_csv.sizePolicy().hasHeightForWidth())
+        self.button_csv.setSizePolicy(sizePolicy)
+        self.button_csv.setMinimumSize(QSize(116, 0))
+        self.button_csv.setFont(font)
+
+        self.horizontalLayout_5.addWidget(self.button_csv)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_5.addItem(self.horizontalSpacer_2)
 
 
-        self.verticalLayout_3.addLayout(self.gridLayout)
+        self.verticalLayout_2.addLayout(self.horizontalLayout_5)
 
 
-        self.verticalLayout.addWidget(self.search_group)
+        self.verticalLayout_3.addWidget(self.search_group)
 
         self.table = QTableWidget(self.centralwidget)
         self.table.setObjectName(u"table")
         self.table.verticalHeader().setVisible(False)
 
-        self.verticalLayout.addWidget(self.table)
+        self.verticalLayout_3.addWidget(self.table)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -209,7 +226,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 819, 22))
+        self.menuBar.setGeometry(QRect(0, 0, 1042, 22))
         self.menu_help = QMenu(self.menuBar)
         self.menu_help.setObjectName(u"menu_help")
         self.menuSettings = QMenu(self.menuBar)
@@ -230,12 +247,13 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.button_remove_all, self.line_firstname_search)
         QWidget.setTabOrder(self.line_firstname_search, self.line_lastname_search)
         QWidget.setTabOrder(self.line_lastname_search, self.button_search)
-        QWidget.setTabOrder(self.button_search, self.table)
+        QWidget.setTabOrder(self.button_search, self.button_csv)
+        QWidget.setTabOrder(self.button_csv, self.table)
 
         self.menuBar.addAction(self.menuSettings.menuAction())
         self.menuBar.addAction(self.menu_help.menuAction())
         self.menu_help.addAction(self.action_about)
-        self.menu_help.addAction(self.actionAbout_Qt)
+        self.menu_help.addAction(self.action_about_qt)
         self.menuSettings.addAction(self.action_dark_mode)
 
         self.retranslateUi(MainWindow)
@@ -246,7 +264,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"Simple SQL Program", None))
         self.action_about.setText(QCoreApplication.translate("MainWindow", u"About", None))
-        self.actionAbout_Qt.setText(QCoreApplication.translate("MainWindow", u"About Qt", None))
+        self.action_about_qt.setText(QCoreApplication.translate("MainWindow", u"About Qt", None))
         self.action_dark_mode.setText(QCoreApplication.translate("MainWindow", u"Dark Mode", None))
         self.input_group.setTitle(QCoreApplication.translate("MainWindow", u"Input Employee Information", None))
         self.date_label.setText(QCoreApplication.translate("MainWindow", u"Date Joined:", None))
@@ -268,9 +286,10 @@ class Ui_MainWindow(object):
         self.button_remove.setText(QCoreApplication.translate("MainWindow", u"Remove Employee", None))
         self.button_remove_all.setText(QCoreApplication.translate("MainWindow", u"Remove All", None))
         self.search_group.setTitle(QCoreApplication.translate("MainWindow", u"Search Employee Information", None))
-        self.line_lastname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Last Name", None))
         self.line_firstname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"First Name", None))
+        self.line_lastname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Last Name", None))
         self.button_search.setText(QCoreApplication.translate("MainWindow", u"Search", None))
+        self.button_csv.setText(QCoreApplication.translate("MainWindow", u"Export to CSV", None))
         self.menu_help.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
         self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi

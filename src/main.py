@@ -1,10 +1,11 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QWidget
+import csv
+from PySide6.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem, QFileDialog, QDialog
 from PySide6.QtCore import QSettings
 from PySide6.QtSql import QSqlQuery
 from PySide6.QtCore import QDate
 from main_ui import Ui_MainWindow as main_ui
-from about_ui import Ui_Form as about_ui
+from about_ui import Ui_Dialog as about_ui
 from create_db import create_db
 import qdarkstyle
 
@@ -12,29 +13,29 @@ class MainWindow(QMainWindow, main_ui):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.settings = QSettings('settings.ini', QSettings.IniFormat)
-        self.loadSettings()
+        self.settings_manager = SettingsManager(self)  # Initializes SettingsManager
+        self.settings_manager.load_settings()  # Load settings when the app starts
 
-        #Input Area
-        self.button_add.clicked.connect(self.add_employee)
-        self.button_update.clicked.connect(self.update_employee)
-        self.button_remove.clicked.connect(self.remove_employee)
-        self.button_remove_all.clicked.connect(self.remove_all)
-        
-        #Search Area
-        self.button_search.clicked.connect(self.search_employee)
+        # Buttons
+        self.button_add.clicked.connect(self.add_employee) # Add Employee button is pressed
+        self.button_update.clicked.connect(self.update_employee) # Update Employee button is pressed
+        self.button_remove.clicked.connect(self.remove_employee) # Remove Employee button is pressed
+        self.button_remove_all.clicked.connect(self.remove_all) # Remove All Employees button is pressed
+        self.button_search.clicked.connect(self.search_employee) # Search Employee button is pressed
+        self.button_csv.clicked.connect(self.export_to_csv) # Export to CSV button is pressed
 
         #Menu Bar
-        self.action_about.triggered.connect(self.show_about)
-        self.actionAbout_Qt.triggered.connect(self.about_qt)
         self.action_dark_mode.toggled.connect(self.dark_mode)
+        self.action_about_qt.triggered.connect(lambda: QApplication.aboutQt())
+        self.action_about.triggered.connect(lambda: AboutWindow(dark_mode=self.action_dark_mode.isChecked()).exec())
+        
         self.initialize_table()
         self.load_table()
 
-    def add_employee(self):
-        firstname = self.line_firstname.text()
-        lastname = self.line_lastname.text()
-        jobtitle = self.line_jobtitle.text()
+    def add_employee(self): # Add Employee button is pressed
+        firstname = self.line_firstname.text().strip()
+        lastname = self.line_lastname.text().strip()
+        jobtitle = self.line_jobtitle.text().strip()
         joindate = self.date_joined.date().toString("MM-dd-yyyy")
         department = self.combobox_department.currentText()
                         
@@ -53,7 +54,7 @@ class MainWindow(QMainWindow, main_ui):
         self.load_table() # this will load the database back into the table with the updated information
         self.clear_fields()
 
-    def remove_employee(self):
+    def remove_employee(self): # Remove Employee button is pressed
         selected_row = self.table.currentRow()
         if selected_row == -1:
             QMessageBox.warning(self, "no employee chosen", "please choose an employee to remove")
@@ -73,7 +74,7 @@ class MainWindow(QMainWindow, main_ui):
 
         self.load_table()
 
-    def update_employee(self):
+    def update_employee(self): # Update Employee button is pressed
         selected_row = self.table.currentRow()
  
         if selected_row == -1:
@@ -108,7 +109,7 @@ class MainWindow(QMainWindow, main_ui):
 
         self.load_table()
 
-    def remove_all(self):
+    def remove_all(self): # Remove All Employees button is pressed
         confirm = QMessageBox.question(self, "Are you sure?", "Are you sure you want to delete?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         match confirm:
             case QMessageBox.StandardButton.No:
@@ -126,20 +127,20 @@ class MainWindow(QMainWindow, main_ui):
 
         self.load_table()
 
-    def search_employee (self):
+    def search_employee (self): # Search Employee button is pressed
         self.table.setRowCount(0)
 
-        firstname_search = self.line_firstname_search.text()
+        firstname_search = self.line_firstname_search.text().strip()
         if firstname_search == '':
             firstname_search = '%'
         else:
-            firstname_search = self.line_firstname_search.text()
+            firstname_search = self.line_firstname_search.text().strip()
 
-        lastname_search = self.line_lastname_search.text()
+        lastname_search = self.line_lastname_search.text().strip()
         if lastname_search == '':
             lastname_search = '%'
         else:
-            lastname_search = self.line_lastname_search.text()
+            lastname_search = self.line_lastname_search.text().strip()
 
         query = QSqlQuery("""
                           SELECT * FROM employees where (last_name like ?) AND (first_name like ?)
@@ -169,11 +170,33 @@ class MainWindow(QMainWindow, main_ui):
 
             row += 1
 
-    def dark_mode(self, checked):
-        if checked:
-            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
-        else:
-            self.setStyleSheet('')
+    def export_to_csv(self):  # Export to CSV button is pressed
+        self.filename = QFileDialog.getSaveFileName(self, 'Export File', '', 'Data File (*.csv)')
+
+        if not self.filename[0]:
+            return
+
+        try:
+            with open(self.filename[0], 'w', newline='') as file:
+                writer = csv.writer(file)
+                
+                # Write the header row (column names from the table)
+                headers = [self.table.horizontalHeaderItem(col).text() for col in range(self.table.columnCount())]
+                writer.writerow(headers)
+
+                # Write the data rows from the table
+                for row in range(self.table.rowCount()):
+                    row_data = []
+                    for col in range(self.table.columnCount()):
+                        item = self.table.item(row, col)
+                        # Append the text if the item exists, otherwise append an empty string
+                        row_data.append(item.text() if item else '')
+                    writer.writerow(row_data)
+
+            QMessageBox.information(self, "Export Successful", f"Table data exported to {self.filename[0]}")
+        
+        except Exception as e:
+            QMessageBox.critical(self, "Export Error", f"Failed to export to CSV: {str(e)}")
 
     def initialize_table(self):
         self.table.setRowCount(0) # clears the table
@@ -214,38 +237,46 @@ class MainWindow(QMainWindow, main_ui):
         self.date_joined.setDate(QDate.currentDate())
         self.combobox_department.setCurrentIndex(0)
 
-    def show_about(self):
-        self.about_window = AboutWindow(dark_mode=self.action_dark_mode.isChecked())
-        self.about_window.show()
+    def dark_mode(self, checked):
+        if checked:
+            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+        else:
+            self.setStyleSheet('')
 
-    def about_qt(self):
-        QApplication.aboutQt()
-
-    def closeEvent(self, event): #settings will save when closing the app
-        self.settings.setValue('window_size', self.size())
-        self.settings.setValue('window_pos', self.pos())
-        self.settings.setValue('dark_mode', self.action_dark_mode.isChecked())
+    def closeEvent(self, event): # Save settings when closing the app
+        self.settings_manager.save_settings()  # Save settings using the manager
         event.accept()
 
-    def loadSettings(self): #settings will load when opening the app
+class SettingsManager: # used to load and save settings when opening and closing the app
+    def __init__(self, main_window):
+        self.main_window = main_window
+        self.settings = QSettings('settings.ini', QSettings.IniFormat)
+
+    def load_settings(self):
         size = self.settings.value('window_size', None)
         pos = self.settings.value('window_pos', None)
         dark = self.settings.value('dark_mode')
+        
         if size is not None:
-            self.resize(size)
+            self.main_window.resize(size)
         if pos is not None:
-            self.move(pos)
+            self.main_window.move(pos)
         if dark == 'true':
-            self.action_dark_mode.setChecked(True)
-            self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+            self.main_window.action_dark_mode.setChecked(True)
+            self.main_window.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
 
-class AboutWindow(QWidget, about_ui): # Configures the About window
+    def save_settings(self):
+        self.settings.setValue('window_size', self.main_window.size())
+        self.settings.setValue('window_pos', self.main_window.pos())
+        self.settings.setValue('dark_mode', self.main_window.action_dark_mode.isChecked())
+
+class AboutWindow(QDialog, about_ui): # this is the About Window
     def __init__(self, dark_mode=False):
         super().__init__()
         self.setupUi(self)
-
         if dark_mode:
             self.setStyleSheet(qdarkstyle.load_stylesheet_pyside6())
+        self.button_ok.clicked.connect(self.accept)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv) # needs to run first
