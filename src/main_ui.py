@@ -194,14 +194,23 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addWidget(self.button_search)
 
-        self.button_csv = QPushButton(self.search_group)
-        self.button_csv.setObjectName(u"button_csv")
-        sizePolicy.setHeightForWidth(self.button_csv.sizePolicy().hasHeightForWidth())
-        self.button_csv.setSizePolicy(sizePolicy)
-        self.button_csv.setMinimumSize(QSize(116, 0))
-        self.button_csv.setFont(font)
+        self.button_import_csv = QPushButton(self.search_group)
+        self.button_import_csv.setObjectName(u"button_import_csv")
+        sizePolicy.setHeightForWidth(self.button_import_csv.sizePolicy().hasHeightForWidth())
+        self.button_import_csv.setSizePolicy(sizePolicy)
+        self.button_import_csv.setMinimumSize(QSize(116, 0))
+        self.button_import_csv.setFont(font)
 
-        self.horizontalLayout_5.addWidget(self.button_csv)
+        self.horizontalLayout_5.addWidget(self.button_import_csv)
+
+        self.button_export_csv = QPushButton(self.search_group)
+        self.button_export_csv.setObjectName(u"button_export_csv")
+        sizePolicy.setHeightForWidth(self.button_export_csv.sizePolicy().hasHeightForWidth())
+        self.button_export_csv.setSizePolicy(sizePolicy)
+        self.button_export_csv.setMinimumSize(QSize(116, 0))
+        self.button_export_csv.setFont(font)
+
+        self.horizontalLayout_5.addWidget(self.button_export_csv)
 
         self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
@@ -247,8 +256,9 @@ class Ui_MainWindow(object):
         QWidget.setTabOrder(self.button_remove_all, self.line_firstname_search)
         QWidget.setTabOrder(self.line_firstname_search, self.line_lastname_search)
         QWidget.setTabOrder(self.line_lastname_search, self.button_search)
-        QWidget.setTabOrder(self.button_search, self.button_csv)
-        QWidget.setTabOrder(self.button_csv, self.table)
+        QWidget.setTabOrder(self.button_search, self.button_import_csv)
+        QWidget.setTabOrder(self.button_import_csv, self.button_export_csv)
+        QWidget.setTabOrder(self.button_export_csv, self.table)
 
         self.menuBar.addAction(self.menuSettings.menuAction())
         self.menuBar.addAction(self.menu_help.menuAction())
@@ -289,7 +299,8 @@ class Ui_MainWindow(object):
         self.line_firstname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"First Name", None))
         self.line_lastname_search.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Last Name", None))
         self.button_search.setText(QCoreApplication.translate("MainWindow", u"Search", None))
-        self.button_csv.setText(QCoreApplication.translate("MainWindow", u"Export to CSV", None))
+        self.button_import_csv.setText(QCoreApplication.translate("MainWindow", u"Import CSV", None))
+        self.button_export_csv.setText(QCoreApplication.translate("MainWindow", u"Export to CSV", None))
         self.menu_help.setTitle(QCoreApplication.translate("MainWindow", u"Help", None))
         self.menuSettings.setTitle(QCoreApplication.translate("MainWindow", u"Settings", None))
     # retranslateUi

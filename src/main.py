@@ -22,7 +22,8 @@ class MainWindow(QMainWindow, main_ui):
         self.button_remove.clicked.connect(self.remove_employee) # Remove Employee button is pressed
         self.button_remove_all.clicked.connect(self.remove_all) # Remove All Employees button is pressed
         self.button_search.clicked.connect(self.search_employee) # Search Employee button is pressed
-        self.button_csv.clicked.connect(self.export_to_csv) # Export to CSV button is pressed
+        self.button_import_csv.clicked.connect(self.import_csv) # Export to CSV button is pressed
+        self.button_export_csv.clicked.connect(self.export_to_csv) # Export to CSV button is pressed
 
         #Menu Bar
         self.action_dark_mode.toggled.connect(self.dark_mode)
@@ -169,6 +170,56 @@ class MainWindow(QMainWindow, main_ui):
             self.table.setItem(row, 5, QTableWidgetItem(department))
 
             row += 1
+
+    def import_csv(self):  # Import CSV button is pressed
+        filename, _ = QFileDialog.getOpenFileName(self, 'Import CSV File', '', 'CSV Files (*.csv)')
+        
+        if not filename:
+            return
+        
+        try:
+            with open(filename, 'r', newline='') as file:
+                reader = csv.reader(file)
+                header = next(reader)  # Skip header row
+                
+                # Verify CSV has expected columns
+                expected_headers = ['ID', 'First Name', 'Last Name', 'Job Title', 'Join Date', 'Department']
+                if header != expected_headers:
+                    QMessageBox.warning(self, "Invalid CSV Format", 
+                                    "CSV must have columns: ID, First Name, Last Name, Job Title, Join Date, Department")
+                    return
+                
+                query = QSqlQuery()
+                query.prepare("""
+                    INSERT INTO employees (first_name, last_name, job_title, join_date, department)
+                    VALUES (?, ?, ?, ?, ?)
+                """)
+                
+                for row in reader:
+                    if len(row) >= 5:  # Ensure row has enough columns (ignoring ID since it's auto-incremented)
+                        firstname = row[1].strip()
+                        lastname = row[2].strip()
+                        jobtitle = row[3].strip()
+                        joindate = row[4].strip()
+                        department = row[5].strip() if len(row) > 5 else ""
+                        
+                        query.addBindValue(firstname)
+                        query.addBindValue(lastname)
+                        query.addBindValue(jobtitle)
+                        query.addBindValue(joindate)
+                        query.addBindValue(department)
+                        
+                        if not query.exec():
+                            QMessageBox.warning(self, "Import Error", 
+                                            f"Failed to import row: {row}\nError: {query.lastError().text()}")
+                            return
+                
+                self.load_table()  # Refresh the table display
+                QMessageBox.information(self, "Import Successful", 
+                                    f"Successfully imported data from {filename}")
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Import Error", f"Failed to import CSV: {str(e)}")
 
     def export_to_csv(self):  # Export to CSV button is pressed
         self.filename = QFileDialog.getSaveFileName(self, 'Export File', '', 'Data File (*.csv)')
