@@ -8,6 +8,7 @@ from main_ui import Ui_MainWindow as main_ui
 from about_ui import Ui_Dialog as about_ui
 from create_db import create_db
 import qdarkstyle
+import uuid
 
 class MainWindow(QMainWindow, main_ui):  
     def __init__(self):
@@ -34,6 +35,7 @@ class MainWindow(QMainWindow, main_ui):
         self.load_table()
 
     def add_employee(self): # Add Employee button is pressed
+        id = str(uuid.uuid4()) # Generate a unique ID
         firstname = self.line_firstname.text().strip()
         lastname = self.line_lastname.text().strip()
         jobtitle = self.line_jobtitle.text().strip()
@@ -42,9 +44,10 @@ class MainWindow(QMainWindow, main_ui):
                         
         query = QSqlQuery()
         query.prepare("""
-                    INSERT INTO employees (first_name, last_name, job_title, join_date, department)
-                    VALUES(?, ?, ?, ?, ?)
+                    INSERT INTO employees (id, first_name, last_name, job_title, join_date, department)
+                    VALUES(?, ?, ?, ?, ?, ?)
                     """)
+        query.addBindValue(id)
         query.addBindValue(firstname)
         query.addBindValue(lastname)
         query.addBindValue(jobtitle)
@@ -61,7 +64,7 @@ class MainWindow(QMainWindow, main_ui):
             QMessageBox.warning(self, "no employee chosen", "please choose an employee to remove")
             return
 
-        id = int(self.table.item(selected_row, 0).text())
+        id = self.table.item(selected_row, 0).text()
 
         confirm = QMessageBox.question(self, "Are you sure?", "Remove Employee?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if confirm == QMessageBox.StandardButton.No:
@@ -82,7 +85,7 @@ class MainWindow(QMainWindow, main_ui):
             QMessageBox.warning(self, "no employee chosen", "please choose an employee to update")
             return
         
-        id = int(self.table.item(selected_row, 0).text())
+        id = self.table.item(selected_row, 0).text()
         firstname = self.table.item(selected_row, 1).text()
         lastname = self.table.item(selected_row, 2).text()
         jobtitle = self.table.item(selected_row, 3).text()
@@ -189,34 +192,61 @@ class MainWindow(QMainWindow, main_ui):
                                     "CSV must have columns: ID, First Name, Last Name, Job Title, Join Date, Department")
                     return
                 
-                query = QSqlQuery()
-                query.prepare("""
-                    INSERT INTO employees (first_name, last_name, job_title, join_date, department)
-                    VALUES (?, ?, ?, ?, ?)
-                """)
+                inserted_count = 0  # Track how many new records were added
                 
                 for row in reader:
-                    if len(row) >= 5:  # Ensure row has enough columns (ignoring ID since it's auto-incremented)
+                    if len(row) >= 6:  # Ensure row has enough columns
+                        # Handle ID: use provided UUID or generate a new one if invalid/empty
+                        id_str = row[0].strip()
+                        try:
+                            # Validate if it's a valid UUID
+                            uuid.UUID(id_str)
+                            id = id_str
+                        except ValueError:
+                            # If not a valid UUID, generate a new one
+                            id = str(uuid.uuid4())
+                        
+                        # Check if this ID already exists in the database
+                        check_query = QSqlQuery()
+                        check_query.prepare("SELECT COUNT(*) FROM employees WHERE id = ?")
+                        check_query.addBindValue(id)
+                        check_query.exec()
+                        check_query.next()
+                        exists = check_query.value(0) > 0
+                        
+                        if exists:
+                            continue  # Skip this row if the ID already exists
+                        
+                        # Prepare the insert query for new records
+                        insert_query = QSqlQuery()
+                        insert_query.prepare("""
+                            INSERT INTO employees (id, first_name, last_name, job_title, join_date, department)
+                            VALUES (?, ?, ?, ?, ?, ?)
+                        """)
+                        
                         firstname = row[1].strip()
                         lastname = row[2].strip()
                         jobtitle = row[3].strip()
                         joindate = row[4].strip()
-                        department = row[5].strip() if len(row) > 5 else ""
+                        department = row[5].strip()
                         
-                        query.addBindValue(firstname)
-                        query.addBindValue(lastname)
-                        query.addBindValue(jobtitle)
-                        query.addBindValue(joindate)
-                        query.addBindValue(department)
+                        insert_query.addBindValue(id)
+                        insert_query.addBindValue(firstname)
+                        insert_query.addBindValue(lastname)
+                        insert_query.addBindValue(jobtitle)
+                        insert_query.addBindValue(joindate)
+                        insert_query.addBindValue(department)
                         
-                        if not query.exec():
+                        if not insert_query.exec():
                             QMessageBox.warning(self, "Import Error", 
-                                            f"Failed to import row: {row}\nError: {query.lastError().text()}")
+                                            f"Failed to import row: {row}\nError: {insert_query.lastError().text()}")
                             return
+                        
+                        inserted_count += 1
                 
                 self.load_table()  # Refresh the table display
                 QMessageBox.information(self, "Import Successful", 
-                                    f"Successfully imported data from {filename}")
+                                    f"Imported {inserted_count} new records from {filename}")
                 
         except Exception as e:
             QMessageBox.critical(self, "Import Error", f"Failed to import CSV: {str(e)}")
@@ -262,7 +292,7 @@ class MainWindow(QMainWindow, main_ui):
 
         row = 0
         while query.next(): # while loop to query all the rows in the database
-            id = query.value(0)
+            id = str(query.value(0))
             firstname = query.value(1)
             lastname = query.value(2)
             jobtitle = query.value(3)
@@ -271,7 +301,7 @@ class MainWindow(QMainWindow, main_ui):
 
             # and add them to the table
             self.table.insertRow(row)
-            self.table.setItem(row, 0, QTableWidgetItem(str(id)))
+            self.table.setItem(row, 0, QTableWidgetItem(id))
             self.table.setItem(row, 1, QTableWidgetItem(firstname))
             self.table.setItem(row, 2, QTableWidgetItem(lastname))
             self.table.setItem(row, 3, QTableWidgetItem(jobtitle))

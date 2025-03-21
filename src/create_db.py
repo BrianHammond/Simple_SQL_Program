@@ -12,7 +12,7 @@ def create_db():
     query = QSqlQuery()
     query.exec("""
                 CREATE TABLE IF NOT EXISTS employees (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id TEXT PRIMARY KEY,
                     first_name TEXT,
                     last_name TEXT,
                     job_title TEXT,
