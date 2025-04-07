@@ -17,6 +17,18 @@ class MainWindow(QMainWindow, main_ui):
         self.settings_manager = SettingsManager(self)  # Initializes SettingsManager
         self.settings_manager.load_settings()  # Load settings when the app starts
 
+        # Populate the department combo box
+        departments = [
+            "Human Resources",
+            "Engineering",
+            "Sales",
+            "Marketing",
+            "Finance",
+            "IT",
+            "Operations"
+        ]
+        self.combobox_department.addItems(departments)
+
         # Buttons
         self.button_add.clicked.connect(self.add_employee) # Add Employee button is pressed
         self.button_update.clicked.connect(self.update_employee) # Update Employee button is pressed
