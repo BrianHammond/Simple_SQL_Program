@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1042, 781)
+        MainWindow.resize(938, 781)
         icon = QIcon()
         icon.addFile(u":/images/ms_icon.jpg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -72,6 +72,10 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.date_joined)
 
+        self.horizontalSpacer_3 = QSpacerItem(30, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_3)
+
         self.department_label = QLabel(self.input_group)
         self.department_label.setObjectName(u"department_label")
         sizePolicy.setHeightForWidth(self.department_label.sizePolicy().hasHeightForWidth())
@@ -89,7 +93,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.combobox_department)
 
-        self.horizontalSpacer = QSpacerItem(349, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(441, 20, QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout.addItem(self.horizontalSpacer)
 
@@ -228,7 +232,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menuBar = QMenuBar(MainWindow)
         self.menuBar.setObjectName(u"menuBar")
-        self.menuBar.setGeometry(QRect(0, 0, 1042, 22))
+        self.menuBar.setGeometry(QRect(0, 0, 938, 22))
         self.menu_help = QMenu(self.menuBar)
         self.menu_help.setObjectName(u"menu_help")
         self.menuSettings = QMenu(self.menuBar)
